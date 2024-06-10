@@ -95,7 +95,7 @@ resource "fortios_routerbgp_neighbor_group" "group" {
   route_reflector_client      = "enable"
   link_down_failover          = "enable"
   additional_path             = "both"
-  adv_additional_path         = length(local.interfaces)*2
+  adv_additional_path         = length(local.interfaces)*2 > 1 ? length(local.interfaces)*2 : null
   capability_graceful_restart = "enable"
   capability_route_refresh    = "enable"
   soft_reconfiguration        = "enable"
