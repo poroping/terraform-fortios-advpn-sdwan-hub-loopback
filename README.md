@@ -3,7 +3,7 @@
 
 Uses forked version of fortios provider
 
-Requires FortiOS >= 6.4.5
+Requires FortiOS >= 7.2.9
 
 Uses sub-table resources in BGP and SDWAN parent tables. Do not mix and match here.
 

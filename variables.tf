@@ -48,8 +48,14 @@ variable "hub_id" {
 
 variable "loopback_ip" {
   type        = string
-  description = "Loopback address for SLA and BGP."
-  default     = "10.255.255.254"
+  description = "Loopback address for BGP."
+  default     = "10.255.255.254/32"
+}
+
+variable "sla_ip" {
+  type        = string
+  description = "Loopback address for SLA target."
+  default     = "10.255.255.255/32"
 }
 
 variable "ipsec" {

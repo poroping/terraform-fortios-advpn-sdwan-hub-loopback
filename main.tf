@@ -86,6 +86,12 @@ resource "fortios_vpnipsec_phase2interface" "phase2" {
   dhgrp      = var.ipsec.dhgrp
 }
 
+# bgp settings require:
+    # set ibgp-multipath enable
+    # set additional-path enable
+    # set recursive-next-hop enable
+    # set recursive-inherit-priority enable
+
 resource "fortios_routerbgp_neighbor_group" "group" {
   vdomparam = var.vdom
 
@@ -145,11 +151,32 @@ resource "fortios_system_interface" "loopback" {
   }
 }
 
+resource "fortios_system_interface" "loopback2" {
+  allow_append = true
+
+  type        = "loopback"
+  name        = "${var.vpn_name_prefix}SLA"
+  ip          = var.sla_ip
+  allowaccess = "ping"
+  vdom        = var.vdom
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes = [ allowaccess ]
+  }
+}
+
 # advertise sla/bgp loopback
 resource "fortios_routerbgp_network" "loopback" {
   vdomparam = var.vdom
 
   prefix = fortios_system_interface.loopback.ip
+}
+
+resource "fortios_routerbgp_network" "loopback2" {
+  vdomparam = var.vdom
+
+  prefix = fortios_system_interface.loopback2.ip
 }
 
 resource "fortios_system_sdwan_zone" "zone" {
@@ -213,7 +240,7 @@ resource "fortios_firewall_policy" "sla_loop" {
   }
 
   dstintf {
-    name = fortios_system_interface.loopback.name
+    name = fortios_system_interface.loopback2.name
   }
 
   service {
@@ -303,6 +330,7 @@ locals {
     bgp_as       = data.fortios_router_bgp.bgp.as
     hub_id       = var.hub_id
     hub_loopback = fortios_system_interface.loopback.ip
+    hub_sla      = fortios_system_interface.loopback2.ip
     links        = local.hub_links
   }
 

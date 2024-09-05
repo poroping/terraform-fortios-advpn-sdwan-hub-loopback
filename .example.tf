@@ -52,11 +52,14 @@ resource "fortios_router_bgp" "hub1" {
 
   vdomparam = "root"
 
-  as                     = local.hub1_bgp_as
-  router_id              = "10.255.1.254"
-  ibgp_multipath         = "enable"
-  additional_path        = "enable"
-  additional_path_select = 4
+  as                         = local.hub1_bgp_as
+  router_id                  = "10.255.1.254"
+  ibgp_multipath             = "enable"
+  ibgp-multipath             = "enable"
+  additional_path            = "enable"
+  recursive_next_hop         = "enable"
+  recursive_inherit_priority = "enable"
+  additional_path_select     = 4
 
   # ignore subtables
   lifecycle {
@@ -88,6 +91,7 @@ module "advpnhub1" {
   hub_id          = 4
   vdom            = "root"
   loopback_ip     = "10.255.1.254/32"
+  sla_ip          = "10.255.1.255/32"
   loopback_subnet = "10.255.1.0/24"
   ipsec           = {}
 }
