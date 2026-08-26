@@ -59,7 +59,7 @@ resource "fortios_vpnipsec_phase1interface" "phase1" {
   exchange_interface_ip = "enable"
   exchange_ip_addr4     = split("/", fortios_system_interface.loopback.ip)[0]
   peertype              = "any"
-  nattraversal          = each.value.nat_ip == null ? "disable" : "forced"
+  nattraversal          = each.value.nat_ip != null ? "forced" : null
   network_overlay       = "enable"
   network_id            = tonumber(each.value.advpn_id)
   net_device            = "disable"
